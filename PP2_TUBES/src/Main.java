@@ -1,4 +1,5 @@
 import view.JenisSampahView;
+import view.MasyarakatView;
 import javax.swing.*;
 
 public class Main {
@@ -9,7 +10,8 @@ public class Main {
             
             JTabbedPane tabbedPane = new JTabbedPane();
             tabbedPane.addTab("Jenis Sampah", new JenisSampahView());
-            // Tambahkan tab lain di sini ya gesss
+            tabbedPane.addTab("Pendaftaran Masyarakat", new MasyarakatView());
+            // tambahkan tab pendaftaran masyarakat disini
             
             frame.add(tabbedPane);
             frame.pack();

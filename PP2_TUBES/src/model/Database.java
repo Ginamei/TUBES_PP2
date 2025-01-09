@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Database {
-    private static final String URL = "jdbc:mysql://localhost:3306/pp2_tubes";
+    private static final String URL = "jdbc:mysql://localhost:8889/pp2_tubes";
     private static final String USER = "root";
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = "root";
     
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
@@ -59,6 +59,47 @@ public class Database {
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
+            stmt.executeUpdate();
+        }
+    }
+    
+    public static void createMasyarakat(Masyarakat masyarakat) throws SQLException {
+        String sql = "INSERT INTO masyarakat (nama, no_telp, alamat, status) VALUES (?, ?, ?, ?)";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, masyarakat.getNama());
+            stmt.setString(2, masyarakat.getNoTelp());
+            stmt.setString(3, masyarakat.getAlamat());
+            stmt.setString(4, masyarakat.getStatus());
+            stmt.executeUpdate();
+        }
+    }
+
+    public static List<Masyarakat> readAllMasyarakat() throws SQLException {
+        List<Masyarakat> list = new ArrayList<>();
+        String sql = "SELECT * FROM masyarakat";
+        try (Connection conn = getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                list.add(new Masyarakat(
+                    rs.getInt("id"),
+                    rs.getString("nama"),
+                    rs.getString("no_telp"),
+                    rs.getString("alamat"),
+                    rs.getString("status")
+                ));
+            }
+        }
+        return list;
+    }
+
+    public static void updateMasyarakatStatus(int id, String status) throws SQLException {
+        String sql = "UPDATE masyarakat SET status=? WHERE id=?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, status);
+            stmt.setInt(2, id);
             stmt.executeUpdate();
         }
     }
