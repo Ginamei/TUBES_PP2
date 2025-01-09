@@ -103,4 +103,45 @@ public class Database {
             stmt.executeUpdate();
         }
     }
+    
+    public static void createKurir(Kurir kurir) throws SQLException {
+        String sql = "INSERT INTO kurir (nama, no_telp, alamat, status) VALUES (?, ?, ?, ?)";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, kurir.getNama());
+            stmt.setString(2, kurir.getNoTelp());
+            stmt.setString(3, kurir.getAlamat());
+            stmt.setString(4, kurir.getStatus());
+            stmt.executeUpdate();
+        }
+    }
+
+    public static List<Kurir> readAllKurir() throws SQLException {
+        List<Kurir> list = new ArrayList<>();
+        String sql = "SELECT * FROM kurir";
+        try (Connection conn = getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                list.add(new Kurir(
+                    rs.getInt("id"),
+                    rs.getString("nama"),
+                    rs.getString("no_telp"),
+                    rs.getString("alamat"),
+                    rs.getString("status")
+                ));
+            }
+        }
+        return list;
+    }
+
+    public static void updateKurirStatus(int id, String status) throws SQLException {
+        String sql = "UPDATE kurir SET status=? WHERE id=?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, status);
+            stmt.setInt(2, id);
+            stmt.executeUpdate();
+        }
+    }
 }
