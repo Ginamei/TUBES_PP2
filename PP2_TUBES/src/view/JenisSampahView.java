@@ -73,7 +73,7 @@ public class JenisSampahView extends JPanel {
 
     private void createButtons(JPanel panel, GridBagConstraints gbc) {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        btnSave = new JButton("Simpan");
+        btnSave = new JButton("Tambah");
         btnUpdate = new JButton("Update");
         btnDelete = new JButton("Hapus");
         btnClear = new JButton("Clear");

@@ -1,4 +1,6 @@
 import view.JenisSampahView;
+import view.DropboxView;
+
 import javax.swing.*;
 
 public class Main {
@@ -9,6 +11,7 @@ public class Main {
             
             JTabbedPane tabbedPane = new JTabbedPane();
             tabbedPane.addTab("Jenis Sampah", new JenisSampahView());
+            tabbedPane.addTab("Dropbox", new DropboxView());
             // Tambahkan tab lain di sini ya gesss
             
             frame.add(tabbedPane);
