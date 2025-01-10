@@ -1,5 +1,6 @@
 import view.JenisSampahView;
 import javax.swing.*;
+import view.KonversiPoinView;
 
 public class Main {
     public static void main(String[] args) {
@@ -9,6 +10,7 @@ public class Main {
             
             JTabbedPane tabbedPane = new JTabbedPane();
             tabbedPane.addTab("Jenis Sampah", new JenisSampahView());
+            tabbedPane.addTab("Konversi Poin", new KonversiPoinView());
             // Tambahkan tab lain di sini ya gesss
             
             frame.add(tabbedPane);
