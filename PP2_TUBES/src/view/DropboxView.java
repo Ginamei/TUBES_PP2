@@ -1,4 +1,3 @@
-// DropboxView.java
 package view;
 
 import controller.DropboxController;
@@ -7,6 +6,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+
+import controller.DropboxPDFExporter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class DropboxView extends JPanel {
     private DropboxController controller;
@@ -17,7 +19,8 @@ public class DropboxView extends JPanel {
     private JTable table;
     private DefaultTableModel tableModel;
     private int selectedId = -1;
-
+    private JButton btnExportPDF;
+    
     // Constructor
     public DropboxView() {
         controller = new DropboxController();
@@ -76,11 +79,14 @@ public class DropboxView extends JPanel {
         JButton updateButton = createButton("Update", e -> handleUpdate());
         JButton deleteButton = createButton("Hapus", e -> handleDelete());
         JButton clearButton = createButton("Clear", e -> clearFields());
+        JButton btnExportPDF = createButton("Export PDF", e -> setupExportPDFListener());
+        
 
         buttonPanel.add(addButton);
         buttonPanel.add(updateButton);
         buttonPanel.add(deleteButton);
         buttonPanel.add(clearButton);
+        buttonPanel.add(btnExportPDF); 
 
         return buttonPanel;
     }
@@ -288,5 +294,34 @@ public class DropboxView extends JPanel {
             "Sukses",
             JOptionPane.INFORMATION_MESSAGE
         );
+    }
+    
+    private void setupExportPDFListener() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Simpan PDF");
+        fileChooser.setFileFilter(new FileNameExtensionFilter("PDF Files", "pdf"));
+
+        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+            if (!filePath.toLowerCase().endsWith(".pdf")) {
+                filePath += ".pdf";
+            }
+
+            try {
+                List<Dropbox> dataList = controller.getAllDropbox();
+                DropboxPDFExporter exporter = new DropboxPDFExporter(dataList);
+                exporter.export(filePath);
+
+                JOptionPane.showMessageDialog(this,
+                    "PDF berhasil disimpan!",
+                    "Sukses",
+                    JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this,
+                    "Gagal menyimpan PDF: " + ex.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 }

@@ -4,7 +4,10 @@ import model.Database;
 import model.KonversiPoin;
 import model.JenisSampah;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import javax.swing.JOptionPane;
 
 public class KonversiPoinController {
     
@@ -37,5 +40,17 @@ public class KonversiPoinController {
     
     public void deleteKonversiPoin(int id) throws SQLException {
         Database.deleteKonversiPoin(id);
+    }
+    
+    public List<Map<String, Object>> getKonversiPoinWithJenisSampah() {
+        try {
+            return Database.readKonversiPoinWithJenisSampah();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, 
+                "Error mengambil data: " + e.getMessage(), 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+            return new ArrayList<>();
+        }
     }
 }

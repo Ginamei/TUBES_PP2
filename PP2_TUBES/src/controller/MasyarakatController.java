@@ -57,4 +57,16 @@ public class MasyarakatController {
             return false;
         }
     }
+    
+    public List<Masyarakat> getAllMasyarakat() {
+        try {
+            return Database.readAllMasyarakat();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, 
+                "Error mengambil data: " + e.getMessage(), 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+            return new ArrayList<>();
+        }
+    }
 }

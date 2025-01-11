@@ -7,6 +7,9 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 
+import controller.MasyarakatPDFExporter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 public class MasyarakatView extends JPanel {
     private MasyarakatController controller;
     private JTextField txtNama, txtNoTelp;
@@ -15,6 +18,7 @@ public class MasyarakatView extends JPanel {
     private DefaultTableModel tableModel;
     private JButton btnSave, btnVerifikasi, btnTolak, btnClear;
     private int selectedId = -1;
+    private JButton btnExportPDF;
 
     public MasyarakatView() {
         controller = new MasyarakatController(this);
@@ -63,11 +67,13 @@ public class MasyarakatView extends JPanel {
         btnVerifikasi = new JButton("Verifikasi");
         btnTolak = new JButton("Tolak");
         btnClear = new JButton("Clear");
+        btnExportPDF = new JButton("Export PDF");
 
         buttonPanel.add(btnSave);
         buttonPanel.add(btnVerifikasi);
         buttonPanel.add(btnTolak);
         buttonPanel.add(btnClear);
+        buttonPanel.add(btnExportPDF);
 
         gbc.gridx = 0; gbc.gridy = 3;
         gbc.gridwidth = 2;
@@ -116,6 +122,35 @@ public class MasyarakatView extends JPanel {
         table.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting() && table.getSelectedRow() != -1) {
                 selectedId = (int) table.getValueAt(table.getSelectedRow(), 0);
+            }
+        });
+        
+        btnExportPDF.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Simpan PDF");
+            fileChooser.setFileFilter(new FileNameExtensionFilter("PDF Files", "pdf"));
+            
+            if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+                String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+                if (!filePath.toLowerCase().endsWith(".pdf")) {
+                    filePath += ".pdf";
+                }
+                
+                try {
+                    List<Masyarakat> dataList = controller.getAllMasyarakat();
+                    MasyarakatPDFExporter exporter = new MasyarakatPDFExporter(dataList);
+                    exporter.export(filePath);
+                    
+                    JOptionPane.showMessageDialog(this,
+                        "PDF berhasil disimpan!",
+                        "Sukses",
+                        JOptionPane.INFORMATION_MESSAGE);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this,
+                        "Gagal menyimpan PDF: " + ex.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
     }

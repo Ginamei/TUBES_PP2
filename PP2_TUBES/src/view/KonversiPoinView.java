@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 import model.Database;
 
+import controller.KonversiPoinPDFExporter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 public class KonversiPoinView extends JPanel {
     private KonversiPoinController controller;
     private JTable table;
@@ -18,6 +21,7 @@ public class KonversiPoinView extends JPanel {
     private JTextField txtPoin;
     private JComboBox<String> cbStatus;
     private int selectedId = -1;
+    private JButton btnExportPDF;
 
     // Inner class untuk combo box item
     private class ComboItem {
@@ -70,12 +74,14 @@ public class KonversiPoinView extends JPanel {
         JButton btnEdit = new JButton("Edit");
         JButton btnHapus = new JButton("Hapus");
         JButton btnClear = new JButton("Clear");
+        btnExportPDF = new JButton("Export PDF");
 
         buttonPanel.add(btnTambah);
         buttonPanel.add(btnEdit);
         buttonPanel.add(btnHapus);
         buttonPanel.add(btnClear);
-
+        buttonPanel.add(btnExportPDF);
+        
         // Table
         String[] columns = {"ID", "Jenis Sampah", "Kategori", "Poin", "Status"};
         tableModel = new DefaultTableModel(columns, 0) {
@@ -180,6 +186,35 @@ public class KonversiPoinView extends JPanel {
                     }
                     txtPoin.setText(table.getValueAt(row, 3).toString());
                     cbStatus.setSelectedItem(table.getValueAt(row, 4));
+                }
+            }
+        });
+        
+        btnExportPDF.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Simpan PDF");
+            fileChooser.setFileFilter(new FileNameExtensionFilter("PDF Files", "pdf"));
+
+            if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+                String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+                if (!filePath.toLowerCase().endsWith(".pdf")) {
+                    filePath += ".pdf";
+                }
+
+                try {
+                    List<Map<String, Object>> dataList = controller.getKonversiPoinWithJenisSampah();
+                    KonversiPoinPDFExporter exporter = new KonversiPoinPDFExporter(dataList);
+                    exporter.export(filePath);
+
+                    JOptionPane.showMessageDialog(this,
+                        "PDF berhasil disimpan!",
+                        "Sukses",
+                        JOptionPane.INFORMATION_MESSAGE);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this,
+                        "Gagal menyimpan PDF: " + ex.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
