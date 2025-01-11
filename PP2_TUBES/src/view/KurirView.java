@@ -1,0 +1,165 @@
+package view;
+
+import controller.KurirController;
+import model.Kurir;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.util.List;
+
+public class KurirView extends JPanel {
+    private KurirController controller;
+    private JTextField txtNama, txtNoTelp;
+    private JTextArea txtAlamat;
+    private JTable table;
+    private DefaultTableModel tableModel;
+    private JButton btnSave, btnVerifikasi, btnTolak, btnClear;
+    private int selectedId = -1;
+
+    public KurirView() {
+        controller = new KurirController(this);
+        initComponents();
+        controller.loadData();
+    }
+
+    private void initComponents() {
+        setLayout(new BorderLayout(10, 10));
+        add(createFormPanel(), BorderLayout.NORTH);
+        add(createTablePanel(), BorderLayout.CENTER);
+        initEventListeners();
+    }
+
+    private JPanel createFormPanel() {
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.anchor = GridBagConstraints.WEST;
+
+        gbc.gridx = 0; gbc.gridy = 0;
+        formPanel.add(new JLabel("Nama:"), gbc);
+        gbc.gridx = 1;
+        txtNama = new JTextField(20);
+        formPanel.add(txtNama, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 1;
+        formPanel.add(new JLabel("No. Telp:"), gbc);
+        gbc.gridx = 1;
+        txtNoTelp = new JTextField(20);
+        formPanel.add(txtNoTelp, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 2;
+        formPanel.add(new JLabel("Alamat:"), gbc);
+        gbc.gridx = 1;
+        txtAlamat = new JTextArea(3, 20);
+        txtAlamat.setLineWrap(true);
+        formPanel.add(new JScrollPane(txtAlamat), gbc);
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        btnSave = new JButton("Daftar");
+        btnVerifikasi = new JButton("Verifikasi");
+        btnTolak = new JButton("Tolak");
+        btnClear = new JButton("Clear");
+
+        buttonPanel.add(btnSave);
+        buttonPanel.add(btnVerifikasi);
+        buttonPanel.add(btnTolak);
+        buttonPanel.add(btnClear);
+
+        gbc.gridx = 0; gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        formPanel.add(buttonPanel, gbc);
+
+        return formPanel;
+    }
+
+    private JScrollPane createTablePanel() {
+        String[] columns = {"ID", "Nama", "No. Telp", "Alamat", "Status"};
+        tableModel = new DefaultTableModel(columns, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        table = new JTable(tableModel);
+        return new JScrollPane(table);
+    }
+
+    private void initEventListeners() {
+        btnSave.addActionListener(e -> {
+            if (validateInput()) {
+                controller.save(
+                    txtNama.getText().trim(),
+                    txtNoTelp.getText().trim(),
+                    txtAlamat.getText().trim()
+                );
+                clearForm();
+            }
+        });
+
+        btnVerifikasi.addActionListener(e -> {
+            if (validateSelection()) {
+                controller.updateStatus(selectedId, "Verifikasi");
+            }
+        });
+
+        btnTolak.addActionListener(e -> {
+            if (validateSelection()) {
+                controller.updateStatus(selectedId, "Ditolak");
+            }
+        });
+
+        btnClear.addActionListener(e -> clearForm());
+
+        table.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting() && table.getSelectedRow() != -1) {
+                selectedId = (int) table.getValueAt(table.getSelectedRow(), 0);
+            }
+        });
+    }
+
+    private boolean validateSelection() {
+        if (selectedId == -1) {
+            JOptionPane.showMessageDialog(this,
+                "Pilih data terlebih dahulu",
+                "Validasi",
+                JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateInput() {
+        if (txtNama.getText().trim().isEmpty() ||
+            txtNoTelp.getText().trim().isEmpty() ||
+            txtAlamat.getText().trim().isEmpty()) {
+            
+            JOptionPane.showMessageDialog(this,
+                "Semua field harus diisi",
+                "Validasi",
+                JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
+    public void displayData(List<Kurir> list) {
+        tableModel.setRowCount(0);
+        for (Kurir k : list) {
+            tableModel.addRow(new Object[]{
+                k.getId(),
+                k.getNama(),
+                k.getNoTelp(),
+                k.getAlamat(),
+                k.getStatus()
+            });
+        }
+    }
+
+    public void clearForm() {
+        txtNama.setText("");
+        txtNoTelp.setText("");
+        txtAlamat.setText("");
+        selectedId = -1;
+        table.clearSelection();
+    }
+}

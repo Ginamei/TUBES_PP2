@@ -1,5 +1,7 @@
 import view.JenisSampahView;
 import view.DropboxView;
+import view.MasyarakatView;
+import view.KurirView;
 import javax.swing.*;
 import view.KonversiPoinView;
 
@@ -13,7 +15,8 @@ public class Main {
             tabbedPane.addTab("Jenis Sampah", new JenisSampahView());
             tabbedPane.addTab("Dropbox", new DropboxView());
             tabbedPane.addTab("Konversi Poin", new KonversiPoinView());
-            // Tambahkan tab lain di sini ya gesss
+            tabbedPane.addTab("Pendaftaran Masyarakat", new MasyarakatView());
+            tabbedPane.addTab("Pendaftaran Kurir", new KurirView());
             
             frame.add(tabbedPane);
             frame.pack();
