@@ -33,7 +33,7 @@ CREATE TABLE `dropbox` (
   `lokasi` text NOT NULL,
   `kapasitas` int NOT NULL,
   `status` enum('Tersedia','Penuh','Rusak') NOT NULL DEFAULT 'Tersedia'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -46,7 +46,7 @@ CREATE TABLE `jenis_sampah` (
   `nama` varchar(100) NOT NULL,
   `kategori` varchar(50) NOT NULL,
   `deskripsi` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -59,7 +59,7 @@ CREATE TABLE `konversi_poin` (
   `jenis_id` int NOT NULL,
   `poin` int NOT NULL,
   `status` enum('Aktif','Nonaktif') NOT NULL DEFAULT 'Aktif'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -73,7 +73,7 @@ CREATE TABLE `kurir` (
   `no_telp` varchar(15) NOT NULL,
   `alamat` text NOT NULL,
   `status` enum('Menunggu Verifikasi','Verifikasi','Ditolak') NOT NULL DEFAULT 'Menunggu Verifikasi'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -87,7 +87,7 @@ CREATE TABLE `masyarakat` (
   `no_telp` varchar(15) NOT NULL,
   `alamat` text NOT NULL,
   `status` enum('Menunggu Verifikasi','Verifikasi','Ditolak') NOT NULL DEFAULT 'Menunggu Verifikasi'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Indexes for dumped tables

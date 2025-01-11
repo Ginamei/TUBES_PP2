@@ -7,6 +7,9 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 
+import controller.JenisSampahPDFExporter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 public class JenisSampahView extends JPanel {
     private JenisSampahController controller;
     private JTextField txtNama;
@@ -16,6 +19,7 @@ public class JenisSampahView extends JPanel {
     private DefaultTableModel tableModel;
     private JButton btnSave, btnUpdate, btnDelete, btnClear;
     private int selectedId = -1;
+    private JButton btnExportPDF;
 
     public JenisSampahView() {
         controller = new JenisSampahController(this);
@@ -73,15 +77,17 @@ public class JenisSampahView extends JPanel {
 
     private void createButtons(JPanel panel, GridBagConstraints gbc) {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        btnSave = new JButton("Simpan");
+        btnSave = new JButton("Tambah");
         btnUpdate = new JButton("Update");
         btnDelete = new JButton("Hapus");
         btnClear = new JButton("Clear");
+        btnExportPDF = new JButton("Export PDF");
 
         buttonPanel.add(btnSave);
         buttonPanel.add(btnUpdate);
         buttonPanel.add(btnDelete);
         buttonPanel.add(btnClear);
+        buttonPanel.add(btnExportPDF); 
 
         gbc.gridx = 0; gbc.gridy = 4;
         gbc.gridwidth = 2;
@@ -106,6 +112,8 @@ public class JenisSampahView extends JPanel {
         setupDeleteListener();
         setupClearListener();
         setupTableListener();
+        
+        setupExportPDFListener();
     }
 
     private void setupSaveListener() {
@@ -227,5 +235,36 @@ public class JenisSampahView extends JPanel {
         txtDeskripsi.setText("");
         selectedId = -1;
         table.clearSelection();
+    }
+    
+    private void setupExportPDFListener() {
+        btnExportPDF.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Simpan PDF");
+            fileChooser.setFileFilter(new FileNameExtensionFilter("PDF Files", "pdf"));
+            
+            if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+                String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+                if (!filePath.toLowerCase().endsWith(".pdf")) {
+                    filePath += ".pdf";
+                }
+                
+                try {
+                    List<JenisSampah> dataList = controller.getAllJenisSampah();
+                    JenisSampahPDFExporter exporter = new JenisSampahPDFExporter(dataList);
+                    exporter.export(filePath);
+                    
+                    JOptionPane.showMessageDialog(this,
+                        "PDF berhasil disimpan!",
+                        "Sukses",
+                        JOptionPane.INFORMATION_MESSAGE);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this,
+                        "Gagal menyimpan PDF: " + ex.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
     }
 }
