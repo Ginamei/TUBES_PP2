@@ -4,6 +4,7 @@ import model.Database;
 import model.JenisSampah;
 import view.JenisSampahView;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 
@@ -55,6 +56,18 @@ public class JenisSampahController {
             JOptionPane.showMessageDialog(view, "Data berhasil dihapus");
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(view, "Error deleting data: " + e.getMessage());
+        }
+    }
+    
+    public List<JenisSampah> getAllJenisSampah() {
+        try {
+            return Database.readAllJenisSampah();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, 
+                "Error mengambil data: " + e.getMessage(), 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+            return new ArrayList<>();
         }
     }
 }

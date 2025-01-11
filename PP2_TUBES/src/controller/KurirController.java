@@ -57,4 +57,16 @@ public class KurirController {
             return false;
         }
     }
+    
+    public List<Kurir> getAllMasyarakat() {
+        try {
+            return Database.readAllKurir();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, 
+                "Error mengambil data: " + e.getMessage(), 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+            return new ArrayList<>();
+        }
+    }
 }
